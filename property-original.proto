@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package property;
+
+service PropertyLookup {
+    rpc AddressByParcel(ParcelRequest) returns (AddressResponse);
+}
+
+message ParcelRequest {
+    string parcel = 1;
+}
+
+message AddressResponse {
+    repeated string addresses = 1;
+    bool failed = 2;
+}

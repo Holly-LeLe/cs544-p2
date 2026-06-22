@@ -1,0 +1,37 @@
+name: ${PROJECT}
+
+services:
+  cache:
+    image: ${PROJECT}-cache
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    deploy:
+      replicas: 3
+    ports:
+      - "5000"
+    environment:
+      - PROJECT=${PROJECT}
+      - DATASET_IMPLEMENTATION=${DATASET_IMPLEMENTATION:-JAVA}
+  java-dataset:
+    image: ${PROJECT}-java-dataset
+    build:
+      context: .
+      dockerfile: Dockerfile.java-dataset
+    deploy:
+      replicas: 2
+    ports:
+      - "5000"
+    environment:
+      - PROJECT=${PROJECT}
+  python-dataset:
+    image: ${PROJECT}-python-dataset
+    build:
+      context: .
+      dockerfile: Dockerfile.python-dataset
+    deploy:
+      replicas: 2
+    ports:
+      - "5000"
+    environment:
+      - PROJECT=${PROJECT}

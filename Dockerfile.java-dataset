@@ -1,0 +1,13 @@
+FROM gradle:8-jdk17
+
+WORKDIR /app
+
+COPY build.gradle settings.gradle ./
+COPY property-original.proto proto/property.proto
+COPY src ./src
+
+RUN gradle installDist
+
+COPY addresses.csv.gz /data/addresses.csv.gz
+
+CMD ["./build/install/dataset-server/bin/dataset-server"]
