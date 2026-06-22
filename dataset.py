@@ -23,26 +23,25 @@ class DatasetServer(property_pb2_grpc.PropertyLookupServicer):
     def _load_data(self, csv_path):
         """
         Loads parcel and address data from a gzipped CSV file.
-        Assumes 'ParcelNumber' is at index 3 and 'MailingAddress' is at index 9.
+        Uses csv.DictReader and assumes column names "Parcel" and "Address".
         """
         try:
             with gzip.open(csv_path, 'rt', encoding='utf-8') as f:
-                reader = csv.reader(f)
-                header = next(reader) # Skip header
+                reader = csv.DictReader(f)
                 
-                # We need Parcel (index 3) and Address (index 9)
-                # Note: These indices are hardcoded, similar to the Java implementation.
-                PARCEL_INDEX = 3
-                ADDRESS_INDEX = 9
+                # Use specified column names
+                PARCEL_COLUMN_NAME = "Parcel"
+                ADDRESS_COLUMN_NAME = "Address"
 
-                for i, row in enumerate(reader):
-                    if len(row) > max(PARCEL_INDEX, ADDRESS_INDEX):
-                        parcel = row[PARCEL_INDEX]
-                        address = row[ADDRESS_INDEX]
+                for row in reader:
+                    # Check if the required columns exist in the row
+                    if PARCEL_COLUMN_NAME in row and ADDRESS_COLUMN_NAME in row:
+                        parcel = row[PARCEL_COLUMN_NAME]
+                        address = row[ADDRESS_COLUMN_NAME]
                         self.parcel_index[parcel].append(address)
                     else:
-                        # Optionally log skipped malformed lines
-                        # print(f"Skipped malformed line {i+2}: {row}")
+                        # Optionally log skipped malformed lines or rows missing columns
+                        # print(f"Skipped row due to missing '{PARCEL_COLUMN_NAME}' or '{ADDRESS_COLUMN_NAME}' column: {row}")
                         pass
             
             # Sort each address list, similar to the Java implementation
@@ -75,12 +74,14 @@ def serve(csv_path):
     # Matching Java thread pool size by using max_workers=1
     server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=1))
     property_pb2_grpc.add_PropertyLookupServicer_to_server(DatasetServer(csv_path), server)
-    server.add_insecure_port('[::]:5000')
-    print("Server started on port 5000")
+    # Listen on 0.0.0.0:5000 as required
+    server.add_insecure_port('0.0.0.0:5000')
+    print("Server started on 0.0.0.0:5000")
     server.start()
     server.wait_for_termination()
 
 if __name__ == '__main__':
-    # Default CSV path, matching the Java implementation
-    CSV_FILE_PATH = "/data/addresses.csv.gz" 
+    # Read addresses.csv.gz from the current working directory by default,
+    # or use path from ADDRESSES_CSV environment variable.
+    CSV_FILE_PATH = os.getenv('ADDRESSES_CSV', 'addresses.csv.gz')
     serve(CSV_FILE_PATH)
