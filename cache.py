@@ -9,13 +9,18 @@ from collections import OrderedDict
 app = Flask("p2")
 
 project = os.environ.get("PROJECT", "p2")
+dataset_implementation = os.environ.get("DATASET_IMPLEMENTATION", "JAVA")
 
-channel1 = grpc.insecure_channel(f"{project}-java-dataset-1:5000")
+if dataset_implementation == "PYTHON":
+    dataset_service = "python-dataset"
+else:
+    dataset_service = "java-dataset"
+
+channel1 = grpc.insecure_channel(f"{project}-{dataset_service}-1:5000")
 stub1 = property_pb2_grpc.PropertyLookupStub(channel1)
 
-channel2 = grpc.insecure_channel(f"{project}-java-dataset-2:5000")
+channel2 = grpc.insecure_channel(f"{project}-{dataset_service}-2:5000")
 stub2 = property_pb2_grpc.PropertyLookupStub(channel2)
-
 last_source = "2"
 
 cache = OrderedDict()
