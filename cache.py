@@ -99,6 +99,52 @@ def parcel_lookup(parcel):
     return flask.jsonify({"source": source, "addrs": addrs, "error": error})
 
 
+@app.route("/zip/<zipcode>")
+def zip_lookup(zipcode):
+    global last_source
+
+    addrs = []
+
+    if last_source == "2":
+        source = "1"
+        stub = stub1
+    else:
+        source = "2"
+        stub = stub2
+
+    try:
+        response = stub.AddressByZip(
+            property_pb2.ZipRequest(zip=zipcode), timeout=1
+        )
+    except grpc.RpcError:
+        if source == "1":
+            source = "2"
+            stub = stub2
+        else:
+            source = "1"
+            stub = stub1
+
+        try:
+            response = stub.AddressByZip(
+                property_pb2.ZipRequest(zip=zipcode), timeout=1
+            )
+        except grpc.RpcError:
+            return flask.jsonify({"source": source, "addrs": addrs, "error": "grpc error"})
+        except Exception as e:
+            return flask.jsonify({"source": source, "addrs": addrs, "error": str(e)})
+    except Exception as e:
+        return flask.jsonify({"source": source, "addrs": addrs, "error": str(e)})
+
+    last_source = source
+
+    addrs = list(response.addresses)
+    error = ""
+    if response.failed:
+        error = "unknown backend error"
+
+    return flask.jsonify({"source": source, "addrs": addrs, "error": error})
+
+
 def main():
     app.run("0.0.0.0", port=5000, debug=False, threaded=False)
 

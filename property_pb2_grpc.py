@@ -39,6 +39,11 @@ class PropertyLookupStub(object):
                 request_serializer=property__pb2.ParcelRequest.SerializeToString,
                 response_deserializer=property__pb2.AddressResponse.FromString,
                 _registered_method=True)
+        self.AddressByZip = channel.unary_unary(
+                '/property.PropertyLookup/AddressByZip',
+                request_serializer=property__pb2.ZipRequest.SerializeToString,
+                response_deserializer=property__pb2.AddressResponse.FromString,
+                _registered_method=True)
 
 
 class PropertyLookupServicer(object):
@@ -50,12 +55,23 @@ class PropertyLookupServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def AddressByZip(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PropertyLookupServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'AddressByParcel': grpc.unary_unary_rpc_method_handler(
                     servicer.AddressByParcel,
                     request_deserializer=property__pb2.ParcelRequest.FromString,
+                    response_serializer=property__pb2.AddressResponse.SerializeToString,
+            ),
+            'AddressByZip': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddressByZip,
+                    request_deserializer=property__pb2.ZipRequest.FromString,
                     response_serializer=property__pb2.AddressResponse.SerializeToString,
             ),
     }
@@ -85,6 +101,33 @@ class PropertyLookup(object):
             target,
             '/property.PropertyLookup/AddressByParcel',
             property__pb2.ParcelRequest.SerializeToString,
+            property__pb2.AddressResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AddressByZip(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/property.PropertyLookup/AddressByZip',
+            property__pb2.ZipRequest.SerializeToString,
             property__pb2.AddressResponse.FromString,
             options,
             channel_credentials,

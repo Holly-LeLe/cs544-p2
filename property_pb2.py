@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eproperty.proto\x12\x08property\"\x1f\n\rParcelRequest\x12\x0e\n\x06parcel\x18\x01 \x01(\t\"4\n\x0f\x41\x64\x64ressResponse\x12\x11\n\taddresses\x18\x01 \x03(\t\x12\x0e\n\x06\x66\x61iled\x18\x02 \x01(\x08\x32W\n\x0ePropertyLookup\x12\x45\n\x0f\x41\x64\x64ressByParcel\x12\x17.property.ParcelRequest\x1a\x19.property.AddressResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eproperty.proto\x12\x08property\"\x1f\n\rParcelRequest\x12\x0e\n\x06parcel\x18\x01 \x01(\t\"\x19\n\nZipRequest\x12\x0b\n\x03zip\x18\x01 \x01(\t\"4\n\x0f\x41\x64\x64ressResponse\x12\x11\n\taddresses\x18\x01 \x03(\t\x12\x0e\n\x06\x66\x61iled\x18\x02 \x01(\x08\x32\x98\x01\n\x0ePropertyLookup\x12\x45\n\x0f\x41\x64\x64ressByParcel\x12\x17.property.ParcelRequest\x1a\x19.property.AddressResponse\x12?\n\x0c\x41\x64\x64ressByZip\x12\x14.property.ZipRequest\x1a\x19.property.AddressResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,8 +33,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_PARCELREQUEST']._serialized_start=28
   _globals['_PARCELREQUEST']._serialized_end=59
-  _globals['_ADDRESSRESPONSE']._serialized_start=61
-  _globals['_ADDRESSRESPONSE']._serialized_end=113
-  _globals['_PROPERTYLOOKUP']._serialized_start=115
-  _globals['_PROPERTYLOOKUP']._serialized_end=202
+  _globals['_ZIPREQUEST']._serialized_start=61
+  _globals['_ZIPREQUEST']._serialized_end=86
+  _globals['_ADDRESSRESPONSE']._serialized_start=88
+  _globals['_ADDRESSRESPONSE']._serialized_end=140
+  _globals['_PROPERTYLOOKUP']._serialized_start=143
+  _globals['_PROPERTYLOOKUP']._serialized_end=295
 # @@protoc_insertion_point(module_scope)

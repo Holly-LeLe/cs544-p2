@@ -4,10 +4,15 @@ package property;
 
 service PropertyLookup {
     rpc AddressByParcel(ParcelRequest) returns (AddressResponse);
+    rpc AddressByZip(ZipRequest) returns (AddressResponse);
 }
 
 message ParcelRequest {
     string parcel = 1;
+}
+
+message ZipRequest {
+    string zip = 1;
 }
 
 message AddressResponse {
