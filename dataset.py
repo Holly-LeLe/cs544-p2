@@ -3,6 +3,7 @@ import gzip
 import csv
 from collections import defaultdict
 import os
+import concurrent.futures # Import for ThreadPoolExecutor
 
 # Assuming property_pb2 and property_pb2_grpc are generated from property.proto
 # You would typically generate these using:
@@ -71,7 +72,8 @@ class DatasetServer(property_pb2_grpc.PropertyLookupServicer):
         return response_builder
 
 def serve(csv_path):
-    server = grpc.server(java.util.concurrent.Executors.newFixedThreadPool(1)) # Matching Java thread pool size
+    # Matching Java thread pool size by using max_workers=1
+    server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=1))
     property_pb2_grpc.add_PropertyLookupServicer_to_server(DatasetServer(csv_path), server)
     server.add_insecure_port('[::]:5000')
     print("Server started on port 5000")
