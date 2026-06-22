@@ -89,8 +89,10 @@ def parcel_lookup(parcel):
 
     addrs = list(response.addresses)
 
-    if response.failed:
-        error = "unknown backend error"
+    if hasattr(response, "error") and response.error:
+        error = response.error
+    elif response.failed:
+        error = "backend error"
     else:
         cache[parcel] = addrs
         if len(cache) > CACHE_SIZE:
@@ -139,8 +141,10 @@ def zip_lookup(zipcode):
 
     addrs = list(response.addresses)
     error = ""
-    if response.failed:
-        error = "unknown backend error"
+    if hasattr(response, "error") and response.error:
+        error = response.error
+    elif response.failed:
+        error = "backend error"
 
     return flask.jsonify({"source": source, "addrs": addrs, "error": error})
 

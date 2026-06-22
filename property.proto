@@ -18,4 +18,5 @@ message ZipRequest {
 message AddressResponse {
     repeated string addresses = 1;
     bool failed = 2;
+    string error = 3;
 }

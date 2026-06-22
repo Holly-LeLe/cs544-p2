@@ -41,6 +41,7 @@ class DatasetServer(property_pb2_grpc.PropertyLookupServicer):
         response = property_pb2.AddressResponse()
         if addrs is None:
             response.failed = True
+            response.error = "no addresses found"
         else:
             response.addresses.extend(addrs)
 
@@ -53,6 +54,7 @@ class DatasetServer(property_pb2_grpc.PropertyLookupServicer):
         response = property_pb2.AddressResponse()
         if addrs is None:
             response.failed = True
+            response.error = "no addresses found"
         else:
             response.addresses.extend(addrs)
 
